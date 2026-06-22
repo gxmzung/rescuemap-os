@@ -1,0 +1,14 @@
+type: infection
+title: 감염병
+summary: 접촉을 줄이고 증상과 격리 상황을 보호자 또는 기관과 공유한다.
+steps:
+  - 불필요한 접촉을 줄인다.
+  - 증상 여부를 기록한다.
+  - 격리 또는 대기 장소를 확인한다.
+  - 보호자 또는 기관에 상태를 공유한다.
+  - 공식 안내를 따른다.
+risk_factors:
+  - symptoms
+  - contact_history
+  - vulnerable_health
+  - crowded_area

@@ -1,0 +1,15 @@
+type: flood
+title: 폭우/침수
+summary: 지하공간과 하천 주변 접근을 피하고 고지대 또는 대피소로 이동한다.
+steps:
+  - 지하차도와 지하주차장 진입을 피한다.
+  - 하천 주변과 저지대 접근을 피한다.
+  - 가까운 고지대 또는 대피소를 확인한다.
+  - 이동이 어렵다면 도움 필요 상태를 공유한다.
+  - 보호자 또는 기관의 확인을 기다린다.
+risk_factors:
+  - underground_space
+  - river_nearby
+  - lowland_area
+  - heavy_rain_warning
+  - night_time

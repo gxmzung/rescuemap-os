@@ -1,0 +1,14 @@
+type: earthquake
+title: 지진/붕괴
+summary: 낙하물과 붕괴 위험을 피하고 진동이 멈춘 뒤 안전한 장소로 이동한다.
+steps:
+  - 낙하물로부터 머리를 보호한다.
+  - 책상 아래나 안전한 공간에 몸을 낮춘다.
+  - 진동이 멈춘 뒤 이동한다.
+  - 엘리베이터를 사용하지 않는다.
+  - 건물 내부에 고립된 경우 위치 단서를 남긴다.
+risk_factors:
+  - building_damage
+  - high_floor
+  - blocked_exit
+  - indoor_space

@@ -1,0 +1,15 @@
+type: fire
+title: 화재
+summary: 연기와 화염을 피하고 엘리베이터가 아닌 계단 또는 안전 구역을 이용한다.
+steps:
+  - 엘리베이터를 사용하지 않는다.
+  - 문 손잡이를 열기 전 온도를 확인한다.
+  - 연기가 있으면 낮은 자세로 이동한다.
+  - 이동이 어렵다면 건물, 층, 구역 정보를 남긴다.
+  - 도움 필요 상태를 공유한다.
+risk_factors:
+  - indoor_space
+  - smoke
+  - high_floor
+  - mobility_limited
+  - power_outage

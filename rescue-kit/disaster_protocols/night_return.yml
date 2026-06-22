@@ -1,0 +1,14 @@
+type: night_return
+title: 야간 귀가 위험
+summary: 보호자 체크인과 안전지점 확인을 통해 귀가 중 위험 상황에 대비한다.
+steps:
+  - 보호자에게 이동 중 상태를 공유한다.
+  - 주변 안전지점을 확인한다.
+  - 위험 구간을 피한다.
+  - 위급 시 도움 필요 상태를 공유한다.
+  - 안전 도착 시 체크인한다.
+risk_factors:
+  - night_time
+  - isolated_route
+  - low_light_area
+  - no_guardian_checkin
