@@ -126,3 +126,31 @@ MIT License
 Lee Youngjun
 Paejae University, Department of Computer Science
 GitHub: @gxmzung
+
+---
+
+## 11. 구현 화면
+
+### 시민용 상태 공유 화면
+
+사용자는 재난 유형, 취약계층 모드, 위치 단서를 선택한 뒤 안전함 / 이동 중 / 도움 필요 중 하나를 눌러 상태 기록을 생성할 수 있습니다.
+
+![Citizen Status Share](assets/screenshots/01_citizen_status_share.png)
+
+### 기관 관리자 대시보드
+
+기관 담당자는 도움 요청 목록, 위험 점수, 위치 단서, 체크인 상태를 확인하고 기관 확인 완료 또는 실패지도 후보 등록 처리를 할 수 있습니다.
+
+![Admin Dashboard](assets/screenshots/02_admin_dashboard.png)
+
+### SAR·공공데이터 위험 레이어
+
+SAR 침수 참고 레이어, 위험구역, 대피소, 사용자 위치 단서를 함께 표시하여 우선 확인 대상을 판단할 수 있도록 돕습니다.
+
+![SAR Risk Layers](assets/screenshots/03_sar_risk_layers.png)
+
+### 오픈소스 재난 대응 키트
+
+지역·학교·기관이 재난 프로토콜, 취약계층 모드, 대피소 데이터, 위험구역 데이터를 직접 수정할 수 있는 구조를 제공합니다.
+
+![Open Source Kit](assets/screenshots/04_open_source_kit.png)
