@@ -1083,3 +1083,27 @@ p {
   font-weight: 800;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
 }
+
+.mapDataBadge {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 500;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.22);
+}
+
+.mapDataBadge.api {
+  color: #064e3b;
+  background: #ccfbf1;
+  border: 1px solid #5eead4;
+}
+
+.mapDataBadge.fallback {
+  color: #7c2d12;
+  background: #ffedd5;
+  border: 1px solid #fdba74;
+}

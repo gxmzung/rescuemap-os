@@ -211,3 +211,30 @@ backend/reports/
 Generated report files are excluded from Git by .gitignore.
 
 이 기능은 재난 대응 종료 후 반복 고립 구역, 체크인 지연, 취약계층 지원 공백을 파악하기 위한 개선 리포트입니다.
+
+---
+
+## 14. Local Data Driven Map Layers
+
+RescueMap OS now reads map-layer data from the editable open-source kit.
+
+RescueMap OS는 지도 레이어 데이터를 코드에 고정하지 않고, 수정 가능한 오픈소스 키트 데이터에서 읽습니다.
+
+### Data Sources
+
+```text
+rescue-kit/local_data/shelters.csv
+rescue-kit/local_data/danger_zones.geojson
+Related API
+GET /api/local-data/shelters
+GET /api/local-data/danger-zones
+Current Map Layers
+Shelter markers from CSV
+Danger-zone polygons from GeoJSON
+User location clue marker
+SAR flood reference mock polygon
+Emergency and welfare facility extension markers
+
+This structure allows local governments, schools, welfare centers, and communities to adapt the map layers without changing frontend code.
+
+이 구조를 통해 지자체, 학교, 복지기관, 지역 커뮤니티가 프론트엔드 코드를 수정하지 않고도 대피소와 위험구역 데이터를 바꿀 수 있습니다.

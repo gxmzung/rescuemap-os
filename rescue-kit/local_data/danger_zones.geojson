@@ -1,0 +1,50 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DANGER-001",
+        "name": "P관 서쪽 복도 고립 위험구역",
+        "risk_type": "fire_isolation",
+        "risk_level": "high",
+        "description": "화재·정전 시 이동 약자 고립 가능성이 있는 실내 위치 단서 구역"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [127.3651, 36.3192],
+            [127.3642, 36.3208],
+            [127.3661, 36.3217],
+            [127.3674, 36.3201],
+            [127.3651, 36.3192]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DANGER-002",
+        "name": "저지대 침수 참고구역",
+        "risk_type": "flood_reference",
+        "risk_level": "medium",
+        "description": "폭우 시 보행 접근성이 낮아질 수 있는 참고 구역"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [127.3639, 36.3194],
+            [127.3631, 36.3222],
+            [127.3661, 36.3244],
+            [127.3693, 36.3229],
+            [127.3682, 36.3198],
+            [127.3639, 36.3194]
+          ]
+        ]
+      }
+    }
+  ]
+}

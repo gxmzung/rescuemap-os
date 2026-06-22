@@ -97,3 +97,41 @@ export async function generateFailureReport(): Promise<{
 export async function fetchFailureReportMarkdown(): Promise<{ markdown: string }> {
   return request("/api/failure-report/markdown");
 }
+
+export type Shelter = {
+  id: string;
+  name: string;
+  type: string;
+  lat: number;
+  lng: number;
+  address: string;
+  capacity: number;
+  note: string;
+};
+
+export type DangerZoneFeatureCollection = {
+  type: "FeatureCollection";
+  features: Array<{
+    type: "Feature";
+    properties: {
+      id: string;
+      name: string;
+      risk_type: string;
+      risk_level: string;
+      description: string;
+    };
+    geometry: {
+      type: "Polygon";
+      coordinates: number[][][];
+    };
+  }>;
+};
+
+export async function fetchShelters(): Promise<Shelter[]> {
+  const data = await request<{ count: number; items: Shelter[] }>("/api/local-data/shelters");
+  return data.items;
+}
+
+export async function fetchDangerZones(): Promise<DangerZoneFeatureCollection> {
+  return request<DangerZoneFeatureCollection>("/api/local-data/danger-zones");
+}

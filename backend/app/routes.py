@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.models import StatusCreate, Incident, CheckinUpdate
+from app.local_data import load_shelters, load_danger_zones
 from app.report import build_failure_report, render_failure_report_markdown, save_failure_report
 from app.database import (
     list_incidents,
@@ -128,3 +129,17 @@ def get_failure_report_markdown():
     return {
         "markdown": markdown,
     }
+
+
+@router.get("/api/local-data/shelters")
+def get_local_shelters():
+    shelters = load_shelters()
+    return {
+        "count": len(shelters),
+        "items": shelters,
+    }
+
+
+@router.get("/api/local-data/danger-zones")
+def get_local_danger_zones():
+    return load_danger_zones()
