@@ -1107,3 +1107,36 @@ p {
   background: #ffedd5;
   border: 1px solid #fdba74;
 }
+
+.regionSelector {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 600;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 70%;
+  padding: 8px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.76);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.24);
+}
+
+.regionSelector button {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5edf7;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.regionSelector button.active {
+  background: #14b8a6;
+  border-color: #5eead4;
+  color: #042f2e;
+}

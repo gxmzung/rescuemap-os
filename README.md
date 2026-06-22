@@ -238,3 +238,32 @@ Emergency and welfare facility extension markers
 This structure allows local governments, schools, welfare centers, and communities to adapt the map layers without changing frontend code.
 
 이 구조를 통해 지자체, 학교, 복지기관, 지역 커뮤니티가 프론트엔드 코드를 수정하지 않고도 대피소와 위험구역 데이터를 바꿀 수 있습니다.
+
+---
+
+## 15. Nationwide Local Data Structure
+
+RescueMap OS is not designed as a single-campus-only system.
+
+RescueMap OS는 특정 학교나 특정 지역 전용 시스템이 아니라, 전국 지자체·학교·복지기관이 각자의 지역 데이터를 수정해 사용할 수 있는 구조를 목표로 합니다.
+
+### Current Sample Regions
+
+- 대전
+- 서울
+- 부산
+- 광주
+- 대구
+- 인천
+- 제주
+
+### Region-based Data
+
+The local data files include a `region` field.
+
+```text
+rescue-kit/local_data/shelters.csv
+rescue-kit/local_data/danger_zones.geojson
+This allows each local government, school, welfare center, or community to maintain its own shelter and danger-zone data.
+
+각 기관은 프론트엔드 코드를 수정하지 않고 CSV와 GeoJSON 데이터만 수정하여 자기 지역의 대피소와 위험구역을 반영할 수 있습니다.

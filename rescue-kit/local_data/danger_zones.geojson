@@ -4,33 +4,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "DANGER-001",
-        "name": "P관 서쪽 복도 고립 위험구역",
-        "risk_type": "fire_isolation",
-        "risk_level": "high",
-        "description": "화재·정전 시 이동 약자 고립 가능성이 있는 실내 위치 단서 구역"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [127.3651, 36.3192],
-            [127.3642, 36.3208],
-            [127.3661, 36.3217],
-            [127.3674, 36.3201],
-            [127.3651, 36.3192]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "DANGER-002",
-        "name": "저지대 침수 참고구역",
+        "id": "DANGER-DJ-001",
+        "region": "대전",
+        "name": "대전 저지대 침수 참고구역",
         "risk_type": "flood_reference",
         "risk_level": "medium",
-        "description": "폭우 시 보행 접근성이 낮아질 수 있는 참고 구역"
+        "description": "폭우 시 보행 접근성이 낮아질 수 있는 저지대 참고 구역"
       },
       "geometry": {
         "type": "Polygon",
@@ -42,6 +21,75 @@
             [127.3693, 36.3229],
             [127.3682, 36.3198],
             [127.3639, 36.3194]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DANGER-SE-001",
+        "region": "서울",
+        "name": "서울 도심 지하공간 침수 참고구역",
+        "risk_type": "urban_flood",
+        "risk_level": "high",
+        "description": "집중호우 시 지하공간과 저지대 접근성이 낮아질 수 있는 참고 구역"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [126.9720, 37.5620],
+            [126.9840, 37.5620],
+            [126.9860, 37.5700],
+            [126.9740, 37.5720],
+            [126.9720, 37.5620]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DANGER-BS-001",
+        "region": "부산",
+        "name": "부산 해안 침수·강풍 참고구역",
+        "risk_type": "coastal_flood_wind",
+        "risk_level": "high",
+        "description": "태풍·해일·강풍 상황에서 해안 접근성이 낮아질 수 있는 참고 구역"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [129.1550, 35.1570],
+            [129.1730, 35.1570],
+            [129.1750, 35.1680],
+            [129.1580, 35.1710],
+            [129.1550, 35.1570]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "DANGER-JJ-001",
+        "region": "제주",
+        "name": "제주 태풍·침수 참고구역",
+        "risk_type": "typhoon_flood",
+        "risk_level": "medium",
+        "description": "태풍과 집중호우 시 도심 저지대 및 해안 접근 위험 참고 구역"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [126.5200, 33.4920],
+            [126.5400, 33.4920],
+            [126.5430, 33.5050],
+            [126.5220, 33.5080],
+            [126.5200, 33.4920]
           ]
         ]
       }

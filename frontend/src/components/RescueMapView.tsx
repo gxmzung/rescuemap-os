@@ -26,7 +26,19 @@ type RescueMapViewProps = {
   layers?: LayerState[];
 };
 
-const CENTER: [number, number] = [36.3218, 127.3672];
+const CENTER: [number, number] = [36.5, 127.8];
+
+const REGION_CENTERS: Record<string, [number, number]> = {
+  전국: [36.5, 127.8],
+  대전: [36.3218, 127.3672],
+  서울: [37.5663, 126.9780],
+  부산: [35.1688, 129.0570],
+  광주: [35.1595, 126.8526],
+  대구: [35.8838, 128.6038],
+  인천: [37.4563, 126.7052],
+  제주: [33.4996, 126.5312],
+};
+
 
 const userPoint: [number, number] = [36.3218, 127.3672];
 const firePoint: [number, number] = [36.3204, 127.3654];
@@ -62,6 +74,7 @@ export default function RescueMapView({ variant, layers }: RescueMapViewProps) {
   const [shelters, setShelters] = useState<Shelter[]>([]);
   const [dangerZones, setDangerZones] = useState<DangerZoneFeatureCollection | null>(null);
   const [dataSource, setDataSource] = useState<"api" | "fallback">("fallback");
+  const [selectedRegion, setSelectedRegion] = useState("전국");
 
   const showShelter = isActive(layers, "shelter");
   const showDanger = isActive(layers, "danger");
@@ -85,6 +98,7 @@ export default function RescueMapView({ variant, layers }: RescueMapViewProps) {
         setShelters([
           {
             id: "SHELTER-FALLBACK",
+            region: "대전",
             name: "근처 대피소 Mock",
             type: "fallback",
             lat: 36.3233,
@@ -103,12 +117,34 @@ export default function RescueMapView({ variant, layers }: RescueMapViewProps) {
   }, []);
 
   const dangerFeatures = dangerZones?.features ?? [];
+  const filteredShelters = selectedRegion === "전국"
+    ? shelters
+    : shelters.filter((item) => item.region === selectedRegion);
+
+  const filteredDangerFeatures = selectedRegion === "전국"
+    ? dangerFeatures
+    : dangerFeatures.filter((feature) => feature.properties.region === selectedRegion);
+
+  const mapCenter = REGION_CENTERS[selectedRegion] ?? CENTER;
+  const mapZoom = selectedRegion === "전국" ? 7 : 13;
 
   return (
     <div className={`mapShell ${variant}`}>
+      <div className="regionSelector">
+        {Object.keys(REGION_CENTERS).map((region) => (
+          <button
+            key={region}
+            className={selectedRegion === region ? "active" : ""}
+            onClick={() => setSelectedRegion(region)}
+          >
+            {region}
+          </button>
+        ))}
+      </div>
       <MapContainer
-        center={CENTER}
-        zoom={16}
+        key={selectedRegion}
+        center={mapCenter}
+        zoom={mapZoom}
         scrollWheelZoom={false}
         className="leafletMap"
       >
@@ -138,7 +174,7 @@ export default function RescueMapView({ variant, layers }: RescueMapViewProps) {
         )}
 
         {showDanger &&
-          dangerFeatures.map((feature) => (
+          filteredDangerFeatures.map((feature) => (
             <Polygon
               key={feature.properties.id}
               positions={geoJsonPolygonToLatLngs(feature.geometry.coordinates)}
@@ -193,7 +229,7 @@ export default function RescueMapView({ variant, layers }: RescueMapViewProps) {
         )}
 
         {showShelter &&
-          shelters.map((shelter) => (
+          filteredShelters.map((shelter) => (
             <CircleMarker
               key={shelter.id}
               center={[shelter.lat, shelter.lng]}

@@ -100,6 +100,7 @@ export async function fetchFailureReportMarkdown(): Promise<{ markdown: string }
 
 export type Shelter = {
   id: string;
+  region: string;
   name: string;
   type: string;
   lat: number;
@@ -115,6 +116,7 @@ export type DangerZoneFeatureCollection = {
     type: "Feature";
     properties: {
       id: string;
+      region: string;
       name: string;
       risk_type: string;
       risk_level: string;

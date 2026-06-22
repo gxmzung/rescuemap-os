@@ -21,6 +21,7 @@ def load_shelters() -> list[dict[str, Any]]:
             shelters.append(
                 {
                     "id": row.get("id", ""),
+                    "region": row.get("region", ""),
                     "name": row.get("name", ""),
                     "type": row.get("type", ""),
                     "lat": float(row.get("lat", 0)),
