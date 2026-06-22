@@ -283,3 +283,62 @@ MIT License
 Lee Youngjun
 Paejae University, Department of Computer Science
 GitHub: @gxmzung
+
+---
+
+## 11. Implementation Screens  
+## 11. 구현 화면
+
+### 11.1 Citizen Status Sharing Screen  
+### 11.1 시민 상태 공유 화면
+
+![Citizen Status Sharing Screen](assets/screenshots/01_user_status_share.png)
+
+The citizen screen is designed for fast use in stressful disaster situations.  
+Users can select a disaster type, choose an optional vulnerable-user mode, and share their current status through only three buttons: Safe, Moving, and Need Help.
+
+시민 화면은 재난 상황에서 빠르게 사용할 수 있도록 설계되었습니다.  
+사용자는 재난 유형을 선택하고, 필요한 경우 취약 모드를 선택한 뒤, “안전함”, “이동 중”, “도움 필요” 세 가지 버튼 중 하나만 눌러 현재 상태를 남길 수 있습니다.
+
+This screen intentionally avoids complex forms and AI-based escape routing.  
+The goal is to record useful clues such as disaster type, vulnerable mode, location clue, time, and risk reference score.
+
+이 화면은 복잡한 입력 양식과 AI 기반 탈출 경로 안내를 의도적으로 제외했습니다.  
+목표는 재난 유형, 취약 모드, 위치 단서, 기록 시간, 참고용 위험 점수처럼 구조자와 기관이 확인할 수 있는 단서를 남기는 것입니다.
+
+---
+
+### 11.2 Institution Admin Dashboard  
+### 11.2 기관 관리자 대시보드
+
+![Institution Admin Dashboard](assets/screenshots/02_admin_dashboard.png)
+
+The admin dashboard shows incoming status records, help requests, risk reference scores, check-in status, and failure-map candidates.  
+It is designed for schools, welfare centers, local institutions, and response managers who need to quickly identify unconfirmed or high-risk cases.
+
+관리자 대시보드는 수신된 상태 기록, 도움 요청, 참고용 위험 점수, 체크인 상태, 실패 지도 후보를 보여줍니다.  
+학교, 복지기관, 지역 기관, 대응 담당자가 아직 확인되지 않았거나 위험도가 높은 요청을 빠르게 파악할 수 있도록 설계되었습니다.
+
+The risk score is not a rescue command or automated life decision.  
+It is only a reference indicator for prioritizing human confirmation.
+
+위험 점수는 구조 명령이나 자동 생명 판단이 아닙니다.  
+사람이 먼저 확인해야 할 대상을 정리하기 위한 참고 지표입니다.
+
+---
+
+### 11.3 Design Direction  
+### 11.3 디자인 방향
+
+The interface uses large cards, clear labels, high-contrast colors, and minimal interaction steps.  
+This is because disaster interfaces should be readable, quick, and usable under stress.
+
+인터페이스는 큰 카드, 명확한 라벨, 높은 대비, 최소한의 조작 단계를 중심으로 구성했습니다.  
+재난 상황에서 사용하는 화면은 예쁘기보다 빠르게 읽히고, 긴장 상태에서도 사용할 수 있어야 하기 때문입니다.
+
+RescueMap OS is designed around one principle:
+
+RescueMap OS의 화면 설계 원칙은 하나입니다.
+
+> Do not make the user think too much during a disaster.  
+> 재난 상황에서 사용자가 오래 고민하지 않게 만든다.
