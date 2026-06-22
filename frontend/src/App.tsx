@@ -5,20 +5,25 @@ import {
   CheckCircle2,
   CircleHelp,
   CloudRain,
+  Database,
   FileText,
   Flame,
   Footprints,
   HeartPulse,
-  LayoutDashboard,
+  Layers3,
+  Map,
   MapPin,
   Moon,
   Radio,
+  Satellite,
   ShieldAlert,
-  Siren,
   UserRoundCheck,
 } from "lucide-react";
 
-type DisasterType = {
+type ViewType = "citizen" | "admin" | "layers" | "kit";
+type StatusType = "safe" | "moving" | "help";
+
+type Disaster = {
   id: string;
   label: string;
   desc: string;
@@ -26,230 +31,206 @@ type DisasterType = {
   icon: ReactNode;
 };
 
-type VulnerableMode = {
+type Mode = {
   id: string;
   label: string;
   desc: string;
   weight: number;
 };
 
-type StatusType = "safe" | "moving" | "help";
-type ViewType = "citizen" | "admin" | "kit";
-
 type Incident = {
   id: string;
   status: StatusType;
-  disasterType: string;
-  vulnerableMode: string;
+  disaster: string;
+  mode: string;
   location: string;
-  riskScore: number;
-  checkin: "보호자 확인" | "기관 확인 대기" | "미확인";
-  createdAt: string;
+  risk: number;
+  checkin: "미확인" | "보호자 확인" | "기관 확인 대기" | "기관 확인 완료";
+  time: string;
 };
 
-const disasters: DisasterType[] = [
-  {
-    id: "flood",
-    label: "폭우/침수",
-    desc: "하천·저지대·지하차도 접근 위험",
-    tone: "blue",
-    icon: <CloudRain size={22} />,
-  },
+const disasters: Disaster[] = [
   {
     id: "fire",
     label: "화재",
-    desc: "연기·정전·건물 내부 고립 위험",
+    desc: "연기·정전·실내 고립 위험",
     tone: "red",
     icon: <Flame size={22} />,
   },
   {
+    id: "flood",
+    label: "폭우/침수",
+    desc: "하천·저지대·지하차도 위험",
+    tone: "blue",
+    icon: <CloudRain size={22} />,
+  },
+  {
     id: "collapse",
     label: "지진/붕괴",
-    desc: "낙하물·출입구 차단·구조물 위험",
+    desc: "낙하물·출입구 차단 위험",
     tone: "stone",
     icon: <Building2 size={22} />,
   },
   {
     id: "night",
     label: "야간 귀가 위험",
-    desc: "보호자 체크인·안전지점 확인",
+    desc: "고립 동선·보호자 체크인",
     tone: "purple",
     icon: <Moon size={22} />,
   },
   {
     id: "infection",
     label: "감염병",
-    desc: "증상 체크·격리·기관 연결",
+    desc: "격리·증상·기관 연결",
     tone: "green",
     icon: <HeartPulse size={22} />,
   },
 ];
 
-const modes: VulnerableMode[] = [
-  {
-    id: "general",
-    label: "일반 모드",
-    desc: "기본 대피 행동카드와 상태 공유",
-    weight: 1.0,
-  },
-  {
-    id: "elderly",
-    label: "노인 모드",
-    desc: "큰 글씨, 보호자 체크인, 이동 도움 요청",
-    weight: 1.2,
-  },
-  {
-    id: "disabled",
-    label: "장애인 이동지원 모드",
-    desc: "계단 회피, 접근 가능한 대피소, 이동 지원",
-    weight: 1.3,
-  },
-  {
-    id: "isolated_youth",
-    label: "고립 청년 모드",
-    desc: "무응답 체크, 비상 연락망, 도움 요청 기록",
-    weight: 1.1,
-  },
-  {
-    id: "night_return",
-    label: "야간 귀가 모드",
-    desc: "보호자 위치 공유, 안전지점 체크인",
-    weight: 1.15,
-  },
+const modes: Mode[] = [
+  { id: "general", label: "일반 모드", desc: "기본 상태 공유", weight: 1 },
+  { id: "elderly", label: "고령자 모드", desc: "큰 글씨·보호자 확인", weight: 1.18 },
+  { id: "disabled", label: "장애인 이동지원", desc: "계단 회피·이동 도움", weight: 1.32 },
+  { id: "isolated", label: "고립 청년 모드", desc: "무응답·비상 연락망", weight: 1.12 },
+  { id: "night", label: "야간 귀가 모드", desc: "안전지점·보호자 체크인", weight: 1.16 },
 ];
 
 const statusMeta: Record<
   StatusType,
-  { label: string; desc: string; risk: number; className: string; icon: ReactNode }
+  { label: string; desc: string; risk: number; icon: ReactNode; className: string }
 > = {
   safe: {
     label: "안전함",
-    desc: "현재 안전하거나 대피 완료 상태",
+    desc: "현재 안전하거나 대피 완료",
     risk: 15,
+    icon: <CheckCircle2 size={30} />,
     className: "safe",
-    icon: <CheckCircle2 size={28} />,
   },
   moving: {
     label: "이동 중",
     desc: "대피소 또는 안전지점으로 이동 중",
     risk: 45,
+    icon: <Footprints size={30} />,
     className: "moving",
-    icon: <Footprints size={28} />,
   },
   help: {
     label: "도움 필요",
     desc: "고립, 이동 어려움, 위험 상황",
     risk: 85,
+    icon: <CircleHelp size={30} />,
     className: "help",
-    icon: <CircleHelp size={28} />,
   },
 };
 
-const initialIncidents: Incident[] = [
+const baseIncidents: Incident[] = [
   {
     id: "RM-001",
     status: "help",
-    disasterType: "화재",
-    vulnerableMode: "장애인 이동지원 모드",
+    disaster: "화재",
+    mode: "장애인 이동지원",
     location: "배재대학교 P관 3층 서쪽 복도",
-    riskScore: 92,
+    risk: 92,
     checkin: "기관 확인 대기",
-    createdAt: "방금 전",
+    time: "방금 전",
   },
   {
     id: "RM-002",
     status: "moving",
-    disasterType: "폭우/침수",
-    vulnerableMode: "노인 모드",
+    disaster: "폭우/침수",
+    mode: "고령자 모드",
     location: "정문 인근 저지대 보행로",
-    riskScore: 68,
+    risk: 68,
     checkin: "보호자 확인",
-    createdAt: "3분 전",
+    time: "3분 전",
   },
   {
     id: "RM-003",
     status: "help",
-    disasterType: "야간 귀가 위험",
-    vulnerableMode: "야간 귀가 모드",
+    disaster: "야간 귀가 위험",
+    mode: "야간 귀가 모드",
     location: "후문 원룸가 골목",
-    riskScore: 74,
+    risk: 74,
     checkin: "미확인",
-    createdAt: "7분 전",
+    time: "7분 전",
   },
+];
+
+const layerItems = [
+  { id: "shelter", label: "대피소", desc: "학교·공공 대피소 위치", active: true },
+  { id: "danger", label: "위험구역", desc: "하천·저지대·지하차도", active: true },
+  { id: "user", label: "사용자 단서", desc: "상태 공유 위치 기록", active: true },
+  { id: "sar", label: "SAR 침수 참고", desc: "Sentinel/SAR 기반 침수 추정 Mock", active: true },
+  { id: "welfare", label: "복지시설", desc: "취약계층 지원 기관", active: false },
+  { id: "emergency", label: "응급기관", desc: "병원·소방서·경찰서", active: false },
 ];
 
 export default function App() {
   const [view, setView] = useState<ViewType>("citizen");
   const [selectedDisaster, setSelectedDisaster] = useState("fire");
   const [selectedMode, setSelectedMode] = useState("disabled");
-  const [status, setStatus] = useState<StatusType | null>("help");
-  const [incidents, setIncidents] = useState<Incident[]>(initialIncidents);
+  const [status, setStatus] = useState<StatusType>("help");
+  const [incidents, setIncidents] = useState<Incident[]>(baseIncidents);
+  const [layers, setLayers] = useState(layerItems);
 
-  const disaster = disasters.find((item) => item.id === selectedDisaster);
-  const mode = modes.find((item) => item.id === selectedMode);
+  const disaster = disasters.find((item) => item.id === selectedDisaster) ?? disasters[0];
+  const mode = modes.find((item) => item.id === selectedMode) ?? modes[0];
 
-  const riskScore = useMemo(() => {
-    if (!status || !mode) return 0;
+  const risk = useMemo(() => {
     return Math.min(100, Math.round(statusMeta[status].risk * mode.weight));
   }, [status, mode]);
-
-  const statusRecord = status
-    ? {
-        status: statusMeta[status].label,
-        disasterType: disaster?.label ?? "-",
-        vulnerableMode: mode?.label ?? "-",
-        location: "배재대학교 P관 3층 서쪽 복도",
-        time: new Date().toLocaleString("ko-KR"),
-        sync: "로컬 저장 후 네트워크 복구 시 전송",
-        riskScore,
-      }
-    : null;
-
-  function sendToDashboard() {
-    if (!statusRecord || !status) return;
-
-    const newIncident: Incident = {
-      id: `RM-${String(incidents.length + 1).padStart(3, "0")}`,
-      status,
-      disasterType: statusRecord.disasterType,
-      vulnerableMode: statusRecord.vulnerableMode,
-      location: statusRecord.location,
-      riskScore: statusRecord.riskScore,
-      checkin: status === "help" ? "기관 확인 대기" : "보호자 확인",
-      createdAt: "방금 전",
-    };
-
-    setIncidents([newIncident, ...incidents]);
-    setView("admin");
-  }
 
   const helpCount = incidents.filter((item) => item.status === "help").length;
   const pendingCount = incidents.filter(
     (item) => item.checkin === "미확인" || item.checkin === "기관 확인 대기"
   ).length;
   const avgRisk = Math.round(
-    incidents.reduce((sum, item) => sum + item.riskScore, 0) / incidents.length
+    incidents.reduce((sum, item) => sum + item.risk, 0) / incidents.length
   );
 
+  function sendStatus() {
+    const newIncident: Incident = {
+      id: `RM-${String(incidents.length + 1).padStart(3, "0")}`,
+      status,
+      disaster: disaster.label,
+      mode: mode.label,
+      location: "배재대학교 P관 3층 서쪽 복도",
+      risk,
+      checkin: status === "help" ? "기관 확인 대기" : "보호자 확인",
+      time: "방금 전",
+    };
+
+    setIncidents([newIncident, ...incidents]);
+    setView("admin");
+  }
+
+  function toggleLayer(id: string) {
+    setLayers((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, active: !item.active } : item))
+    );
+  }
+
   return (
-    <main className={view === "admin" ? "app admin-theme" : "app citizen-theme"}>
+    <main className={`app ${view === "admin" || view === "layers" ? "dark" : "light"}`}>
       <header className="topbar">
         <div className="brand">
-          <div className="brand-mark">
-            <ShieldAlert size={22} />
+          <div className="brandIcon">
+            <ShieldAlert size={24} />
           </div>
           <div>
             <strong>RescueMap OS</strong>
-            <span>Open-source Disaster Response Kit</span>
+            <span>재난 대응 오픈소스 키트</span>
           </div>
         </div>
 
-        <nav className="nav-tabs">
+        <nav className="tabs">
           <button className={view === "citizen" ? "active" : ""} onClick={() => setView("citizen")}>
-            시민 상태 공유
+            시민용
           </button>
           <button className={view === "admin" ? "active" : ""} onClick={() => setView("admin")}>
             기관 대시보드
+          </button>
+          <button className={view === "layers" ? "active" : ""} onClick={() => setView("layers")}>
+            SAR·위험 레이어
           </button>
           <button className={view === "kit" ? "active" : ""} onClick={() => setView("kit")}>
             오픈소스 키트
@@ -258,58 +239,65 @@ export default function App() {
       </header>
 
       {view === "citizen" && (
-        <section className="citizen-page">
-          <section className="citizen-hero">
+        <section className="page citizen">
+          <section className="hero citizenHero">
             <div>
-              <div className="safety-badge">
-                <Siren size={18} />
+              <div className="badge warm">
+                <MapPin size={18} />
                 위치 정보는 상태 공유 시에만 기록됩니다
               </div>
-              <h1>지금 어떤 상황인가요?</h1>
+              <h1>재난 상황에서 빠르게 상태를 남기세요</h1>
               <p>
-                재난 상황에서는 복잡한 입력보다 빠른 상태 공유가 중요합니다.
-                재난 유형과 필요한 지원 모드를 선택한 뒤, 현재 상태를 남겨주세요.
+                복잡한 신고 양식 대신 재난 유형, 취약 모드, 위치 단서, 현재 상태를 최소 입력으로 남깁니다.
               </p>
             </div>
 
-            <div className="emergency-summary">
-              <strong>핵심 원칙</strong>
-              <span>재난 전: 대피 기억</span>
-              <span>재난 중: 위치·상태 기록</span>
-              <span>재난 후: 실패 지도</span>
+            <div className="locationBox">
+              <div className="boxHead">
+                <strong>위치 단서 입력</strong>
+                <span>선택 입력</span>
+              </div>
+              <div className="inputGrid">
+                <input placeholder="건물 예) P관" defaultValue="P관" />
+                <input placeholder="층 예) 3층" defaultValue="3층" />
+                <input placeholder="호실/구역" defaultValue="서쪽 복도" />
+                <input placeholder="주변 단서" defaultValue="엘리베이터 근처" />
+              </div>
+              <div className="chips">
+                <span>엘리베이터 없음</span>
+                <span>연기 냄새</span>
+                <span>전기 문제</span>
+                <span>직접 입력</span>
+              </div>
             </div>
           </section>
 
-          <section className="citizen-grid">
-            <div className="white-panel">
-              <h2>1. 재난 유형 선택</h2>
-              <div className="disaster-grid">
+          <section className="split">
+            <div className="panel">
+              <h2>1. 재난 유형</h2>
+              <div className="choiceGrid">
                 {disasters.map((item) => (
                   <button
                     key={item.id}
-                    className={`choice-card tone-${item.tone} ${
-                      selectedDisaster === item.id ? "active" : ""
-                    }`}
                     onClick={() => setSelectedDisaster(item.id)}
+                    className={`choice tone-${item.tone} ${selectedDisaster === item.id ? "selected" : ""}`}
                   >
-                    <div className="choice-icon">{item.icon}</div>
-                    <div>
-                      <strong>{item.label}</strong>
-                      <p>{item.desc}</p>
-                    </div>
+                    <div>{item.icon}</div>
+                    <strong>{item.label}</strong>
+                    <p>{item.desc}</p>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="white-panel">
-              <h2>2. 취약 모드 선택</h2>
-              <div className="mode-list">
+            <div className="panel">
+              <h2>2. 취약계층 모드</h2>
+              <div className="modeList">
                 {modes.map((item) => (
                   <button
                     key={item.id}
-                    className={`mode-card ${selectedMode === item.id ? "active" : ""}`}
                     onClick={() => setSelectedMode(item.id)}
+                    className={`mode ${selectedMode === item.id ? "selected" : ""}`}
                   >
                     <UserRoundCheck size={20} />
                     <div>
@@ -322,24 +310,17 @@ export default function App() {
             </div>
           </section>
 
-          <section className="white-panel status-share">
-            <div className="section-head">
-              <div>
-                <h2>3. 3버튼 상태 공유</h2>
-                <p>
-                  위기 상황에서 길게 입력하지 않아도 됩니다. 아래 세 가지 중 하나만 선택하면 위치와 상태 단서가 남습니다.
-                </p>
-              </div>
-            </div>
-
-            <div className="status-grid">
+          <section className="panel">
+            <h2>3. 상태 공유</h2>
+            <p className="sectionDesc">
+              위기 상황에서는 아래 세 가지 중 하나만 선택해도 구조 단서가 남습니다.
+            </p>
+            <div className="statusGrid">
               {(Object.keys(statusMeta) as StatusType[]).map((key) => (
                 <button
                   key={key}
-                  className={`status-big ${statusMeta[key].className} ${
-                    status === key ? "active" : ""
-                  }`}
                   onClick={() => setStatus(key)}
+                  className={`status ${statusMeta[key].className} ${status === key ? "selected" : ""}`}
                 >
                   {statusMeta[key].icon}
                   <strong>{statusMeta[key].label}</strong>
@@ -349,161 +330,202 @@ export default function App() {
             </div>
           </section>
 
-          <section className="citizen-result">
-            <div className="white-panel record-panel">
-              <div className="result-title">
-                <MapPin size={22} />
-                <h2>상태 기록 미리보기</h2>
+          <section className="split resultSplit">
+            <div className="panel recordPanel">
+              <h2>상태 기록 미리보기</h2>
+              <div className="recordRows">
+                <p><strong>상태</strong><span>{statusMeta[status].label}</span></p>
+                <p><strong>재난 유형</strong><span>{disaster.label}</span></p>
+                <p><strong>취약 모드</strong><span>{mode.label}</span></p>
+                <p><strong>위치 단서</strong><span>배재대학교 P관 3층 서쪽 복도</span></p>
+                <p><strong>위험 점수</strong><span>{risk}점 · 참고용</span></p>
+                <p><strong>동기화</strong><span>로컬 저장 후 네트워크 복구 시 전송</span></p>
               </div>
-
-              {statusRecord ? (
-                <>
-                  <div className="record-list">
-                    <p><strong>상태</strong><span>{statusRecord.status}</span></p>
-                    <p><strong>재난 유형</strong><span>{statusRecord.disasterType}</span></p>
-                    <p><strong>취약 모드</strong><span>{statusRecord.vulnerableMode}</span></p>
-                    <p><strong>위치 단서</strong><span>{statusRecord.location}</span></p>
-                    <p><strong>위험 점수</strong><span>{statusRecord.riskScore}점 · 참고용</span></p>
-                    <p><strong>기록 시간</strong><span>{statusRecord.time}</span></p>
-                    <p><strong>동기화</strong><span>{statusRecord.sync}</span></p>
-                  </div>
-
-                  <button className="send-button" onClick={sendToDashboard}>
-                    기관 대시보드로 기록 보내기
-                  </button>
-                </>
-              ) : (
-                <div className="empty-state">
-                  아직 상태가 선택되지 않았습니다.
-                </div>
-              )}
+              <button className="primary" onClick={sendStatus}>기관 대시보드로 기록 보내기</button>
             </div>
 
-            <div className="white-panel ethics-panel">
-              <h2>윤리적 설계 원칙</h2>
-              <ul>
-                <li>AI 기반 실내 탈출 경로 안내를 제공하지 않습니다.</li>
-                <li>사용자의 생명 판단을 자동화하지 않습니다.</li>
-                <li>위치 정보는 상시 추적하지 않습니다.</li>
-                <li>위험 점수는 구조 명령이 아닌 참고 지표입니다.</li>
-                <li>재난 후 데이터는 익명화된 실패 지도로 전환합니다.</li>
-              </ul>
+            <div className="panel shelterPanel">
+              <h2>근처 대피소</h2>
+              <div className="miniMap lightMap">
+                <span className="pin shelter">대피소</span>
+                <span className="pin danger">화재</span>
+                <span className="pin user">내 위치</span>
+              </div>
+              <p>지도 정보는 예시이며, 실제 서비스에서는 공공데이터와 지역 설정 파일을 연결합니다.</p>
             </div>
           </section>
         </section>
       )}
 
       {view === "admin" && (
-        <section className="admin-page">
-          <div className="admin-hero">
+        <section className="page admin">
+          <div className="adminHero">
             <div>
-              <div className="admin-badge">
-                <LayoutDashboard size={18} />
+              <div className="badge blue">
+                <Radio size={18} />
                 Institution Control Dashboard
               </div>
-              <h1>기관 관리자 대시보드</h1>
-              <p>
-                수신된 상태 기록, 도움 요청, 체크인 상태, 위험 점수, 실패 지도 후보를 확인합니다.
-              </p>
+              <h1>실시간 재난 대응 현황</h1>
+              <p>도움 요청, 미확인 사용자, 위험 점수, 체크인 상태를 지도와 함께 확인합니다.</p>
             </div>
           </div>
 
-          <div className="admin-stats">
-            <div className="stat-card danger">
-              <AlertTriangle size={26} />
-              <span>도움 필요</span>
-              <strong>{helpCount}건</strong>
-            </div>
-            <div className="stat-card warning">
-              <Radio size={26} />
-              <span>미확인/기관 대기</span>
-              <strong>{pendingCount}건</strong>
-            </div>
-            <div className="stat-card info">
-              <ShieldAlert size={26} />
-              <span>평균 위험 점수</span>
-              <strong>{avgRisk}점</strong>
-            </div>
-            <div className="stat-card report">
-              <FileText size={26} />
-              <span>실패 지도 후보</span>
-              <strong>3구역</strong>
-            </div>
+          <div className="stats">
+            <div className="stat danger"><AlertTriangle /><span>도움 필요</span><strong>{helpCount}건</strong></div>
+            <div className="stat warning"><Radio /><span>미확인/기관 대기</span><strong>{pendingCount}건</strong></div>
+            <div className="stat info"><ShieldAlert /><span>평균 위험 점수</span><strong>{avgRisk}점</strong></div>
+            <div className="stat green"><FileText /><span>실패지도 후보</span><strong>3구역</strong></div>
           </div>
 
-          <section className="admin-grid">
-            <div className="admin-panel">
-              <h2>도움 요청 및 상태 기록</h2>
-              <div className="incident-list">
+          <section className="adminLayout">
+            <div className="darkPanel">
+              <h2>도움 요청 목록</h2>
+              <div className="incidentList">
                 {incidents.map((item) => (
-                  <div key={item.id} className="incident-card">
-                    <div className="incident-top">
+                  <article key={item.id} className="incident">
+                    <div className="incidentTop">
                       <strong>{item.id}</strong>
-                      <span>{item.createdAt}</span>
+                      <span>{item.time}</span>
                     </div>
                     <p>{item.location}</p>
-                    <div className="incident-meta">
+                    <div className="tags">
                       <span>{statusMeta[item.status].label}</span>
-                      <span>{item.disasterType}</span>
-                      <span>{item.vulnerableMode}</span>
+                      <span>{item.disaster}</span>
+                      <span>{item.mode}</span>
                       <span>{item.checkin}</span>
                     </div>
-                    <div className="risk-track">
-                      <span style={{ width: `${item.riskScore}%` }} />
-                    </div>
-                    <small>위험 점수 {item.riskScore}점 · 구조 명령이 아닌 참고용 우선순위</small>
-                  </div>
+                    <div className="riskBar"><span style={{ width: `${item.risk}%` }} /></div>
+                    <small>위험 점수 {item.risk}점 · 사람 확인을 위한 참고용 우선순위</small>
+                  </article>
                 ))}
               </div>
             </div>
 
-            <div className="admin-panel">
-              <h2>실패 지도 후보</h2>
-              <div className="failure-map">
-                <div className="map-label label-high">P관 3층</div>
-                <div className="map-label label-mid one">정문 저지대</div>
-                <div className="map-label label-mid two">후문 골목</div>
+            <div className="darkPanel mapPanel">
+              <div className="mapHeader">
+                <h2>현장 지도</h2>
+                <button onClick={() => setView("layers")}>레이어 상세</button>
               </div>
+              <div className="bigMap">
+                <span className="mapBlob sar">SAR 침수 참고</span>
+                <span className="mapBlob fire">화재 발생</span>
+                <span className="mapBlob shelter">대피소</span>
+                <span className="mapBlob user">사용자 단서</span>
+              </div>
+              <div className="mapLegend">
+                <span>SAR 침수 참고</span>
+                <span>위험 구역</span>
+                <span>대피소</span>
+                <span>사용자 단서</span>
+              </div>
+            </div>
+
+            <div className="darkPanel detailPanel">
+              <h2>선택 신고 상세</h2>
+              <div className="detailCard">
+                <strong>RM-001</strong>
+                <p>장애인 이동지원 모드 · 화재 · 도움 필요</p>
+                <p>위치 단서: P관 3층 서쪽 복도</p>
+                <p>체크인: 기관 확인 대기</p>
+                <button>기관 확인 완료 처리</button>
+              </div>
+              <div className="ethicsBox">
+                위험 점수는 구조 명령이 아니라 사람이 먼저 확인할 대상을 정리하기 위한 참고 지표입니다.
+              </div>
+            </div>
+          </section>
+        </section>
+      )}
+
+      {view === "layers" && (
+        <section className="page layersPage">
+          <div className="adminHero">
+            <div>
+              <div className="badge blue">
+                <Satellite size={18} />
+                SAR & Public Data Risk Layers
+              </div>
+              <h1>SAR·공공데이터 위험 레이어</h1>
               <p>
-                재난 종료 후 도움 요청, 고립 위치, 체크인 지연, 대피소 접근성 문제를 익명화하여 실패 지도 리포트로 전환합니다.
+                SAR는 사람 추적이나 실시간 탈출 지시가 아니라, 침수 가능 영역을 이해하기 위한 참고 레이어로 사용합니다.
               </p>
+            </div>
+          </div>
+
+          <section className="layerLayout">
+            <div className="darkPanel">
+              <h2>데이터 레이어</h2>
+              <div className="layerList">
+                {layers.map((item) => (
+                  <button
+                    key={item.id}
+                    className={item.active ? "on" : ""}
+                    onClick={() => toggleLayer(item.id)}
+                  >
+                    <Layers3 size={18} />
+                    <div>
+                      <strong>{item.label}</strong>
+                      <span>{item.desc}</span>
+                    </div>
+                    <em>{item.active ? "ON" : "OFF"}</em>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="darkPanel layerMapPanel">
+              <h2>위험 레이어 지도</h2>
+              <div className="layerMap">
+                {layers.find((item) => item.id === "sar")?.active && <span className="sarArea">SAR 침수 추정 영역</span>}
+                {layers.find((item) => item.id === "danger")?.active && <span className="dangerArea">위험구역</span>}
+                {layers.find((item) => item.id === "shelter")?.active && <span className="shelterMark">대피소</span>}
+                {layers.find((item) => item.id === "user")?.active && <span className="userMark">사용자 단서</span>}
+              </div>
+              <div className="notice">
+                Sentinel/SAR 기반 레이어는 MVP 단계에서 Mock Reference Layer로 구현되며, 고도화 단계에서 실제 데이터와 연결합니다.
+              </div>
+            </div>
+
+            <div className="darkPanel">
+              <h2>데이터 출처 계획</h2>
+              <div className="sourceRows">
+                <p><strong>대피소</strong><span>공공데이터 CSV</span></p>
+                <p><strong>위험구역</strong><span>GeoJSON 지역 데이터</span></p>
+                <p><strong>도로/하천</strong><span>OpenStreetMap</span></p>
+                <p><strong>SAR</strong><span>Sentinel/SAR 침수 참고 레이어</span></p>
+                <p><strong>보고서</strong><span>익명화된 실패 지도 Markdown</span></p>
+              </div>
             </div>
           </section>
         </section>
       )}
 
       {view === "kit" && (
-        <section className="kit-page">
-          <div className="white-panel kit-hero">
-            <h1>오픈소스 재난 대응 키트</h1>
-            <p>
-              RescueMap OS는 하나의 고정 앱이 아니라, 지역·학교·복지기관이 자기 환경에 맞게 수정할 수 있는 데이터 키트 구조를 가집니다.
-            </p>
+        <section className="page kitPage">
+          <section className="hero kitHero">
+            <div>
+              <div className="badge warm">
+                <Database size={18} />
+                Editable Open-source Kit
+              </div>
+              <h1>지역이 직접 수정하는 재난 대응 키트</h1>
+              <p>
+                RescueMap OS는 하나의 고정 앱이 아니라, 지역·학교·복지기관이 자기 환경에 맞게 수정할 수 있는 데이터 구조를 제공합니다.
+              </p>
+            </div>
+          </section>
+
+          <div className="kitCards">
+            <div className="kitCard"><strong>disaster_protocols</strong><span>재난 행동카드 YAML</span></div>
+            <div className="kitCard"><strong>vulnerable_modes</strong><span>취약계층 모드 YAML</span></div>
+            <div className="kitCard"><strong>local_data</strong><span>대피소 CSV / 위험구역 GeoJSON</span></div>
+            <div className="kitCard"><strong>report_templates</strong><span>실패지도 Markdown</span></div>
           </div>
 
-          <div className="kit-grid">
-            <div className="kit-card">
-              <strong>disaster_protocols</strong>
-              <span>재난 유형별 행동 프로토콜 YAML</span>
-            </div>
-            <div className="kit-card">
-              <strong>vulnerable_modes</strong>
-              <span>취약계층 맞춤 모드 YAML</span>
-            </div>
-            <div className="kit-card">
-              <strong>local_data</strong>
-              <span>대피소 CSV / 위험구역 GeoJSON</span>
-            </div>
-            <div className="kit-card">
-              <strong>report_templates</strong>
-              <span>재난 후 실패 지도 리포트 Markdown</span>
-            </div>
-          </div>
-
-          <pre className="tree-view">{`rescue-kit/
+          <pre className="tree">{`rescue-kit/
 ├── disaster_protocols/
-│   ├── flood.yml
 │   ├── fire.yml
+│   ├── flood.yml
 │   └── earthquake.yml
 ├── vulnerable_modes/
 │   ├── elderly.yml
