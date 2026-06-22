@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import RescueMapView from "./components/RescueMapView";
 import ScenarioPanel from "./components/ScenarioPanel";
 import type { DemoScenario } from "./data/demoScenarios";
+import type { DemoScenario } from "./data/demoScenarios";
 import { createStatus, fetchIncidents, updateIncidentCheckin, generateFailureReport, type CheckinStatus } from "./api";
 import {
   AlertTriangle,
@@ -162,6 +163,7 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "connected" | "error">("idle");
   const [apiMessage, setApiMessage] = useState("Mock API 연결 전");
   const [reportMessage, setReportMessage] = useState("아직 생성된 실패지도 리포트가 없습니다.");
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string | undefined>();
   const [selectedScenarioId, setSelectedScenarioId] = useState<string | undefined>();
 
   const disaster = disasters.find((item) => item.id === selectedDisaster) ?? disasters[0];
@@ -352,6 +354,11 @@ export default function App() {
               </div>
             </div>
           </section>
+
+          <ScenarioPanel
+            onRunScenario={runScenario}
+            selectedScenarioId={selectedScenarioId}
+          />
 
           <ScenarioPanel
             onRunScenario={runScenario}
