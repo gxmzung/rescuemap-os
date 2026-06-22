@@ -342,3 +342,53 @@ RescueMap OS의 화면 설계 원칙은 하나입니다.
 
 > Do not make the user think too much during a disaster.  
 > 재난 상황에서 사용자가 오래 고민하지 않게 만든다.
+
+---
+
+## 12. Mock Backend API  
+## 12. Mock 백엔드 API
+
+RescueMap OS includes a FastAPI-based mock backend API for demonstrating the core data flow.
+
+RescueMap OS는 핵심 데이터 흐름을 시연하기 위해 FastAPI 기반 Mock 백엔드 API를 포함합니다.
+
+### Backend Features  
+### 백엔드 기능
+
+- Create citizen status records / 시민 상태 기록 생성
+- List incident records / 도움 요청 목록 조회
+- Update check-in status / 체크인 상태 변경
+- Provide SAR and public-data layers / SAR·공공데이터 레이어 제공
+- Provide open-source kit structure / 오픈소스 키트 구조 제공
+- Preview failure-map report candidates / 실패지도 후보 리포트 미리보기
+
+### Running the Backend  
+### 백엔드 실행 방법
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+Local API URL:
+
+http://127.0.0.1:8000
+
+Swagger API Docs:
+
+http://127.0.0.1:8000/docs
+Main Endpoints
+주요 엔드포인트
+GET    /api/incidents
+POST   /api/status
+PATCH  /api/incidents/{incident_id}/checkin
+GET    /api/layers
+GET    /api/kit
+GET    /api/failure-report
+
+The backend is currently a mock API.
+It is designed to show the intended flow before connecting a database.
+
+현재 백엔드는 Mock API입니다.
+데이터베이스 연결 전, 프로젝트의 핵심 작동 흐름을 보여주기 위한 구조입니다.
