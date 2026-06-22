@@ -154,3 +154,30 @@ SAR 침수 참고 레이어, 위험구역, 대피소, 사용자 위치 단서를
 지역·학교·기관이 재난 프로토콜, 취약계층 모드, 대피소 데이터, 위험구역 데이터를 직접 수정할 수 있는 구조를 제공합니다.
 
 ![Open Source Kit](assets/screenshots/04_open_source_kit.png)
+
+---
+
+## 12. SQLite Persistence
+
+The backend now stores incident records in a local SQLite database.
+
+백엔드는 이제 시민 상태 기록과 기관 체크인 상태를 로컬 SQLite 데이터베이스에 저장합니다.
+
+### Stored Data
+
+- incident id
+- status
+- disaster type
+- vulnerable mode
+- location clue
+- risk score
+- check-in status
+- created time label
+
+The local database file is created at:
+
+```text
+backend/data/rescuemap.db
+This database file is excluded from Git by .gitignore.
+
+SQLite는 MVP 단계의 로컬 저장 구조이며, 향후 PostgreSQL/PostGIS 기반 공간 데이터베이스로 확장할 수 있습니다.
