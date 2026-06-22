@@ -1,68 +1,46 @@
 # RescueMap OS
 
-**RescueMap OS** is an open-source disaster response kit designed to help citizens, vulnerable users, guardians, schools, welfare centers, and local institutions record location clues, share status, and generate post-disaster failure maps.
+**RescueMap OS** is an open-source disaster response kit for location clues, vulnerable-user check-ins, and post-disaster failure-map reporting.
 
-## Core Concept
+## Core Idea
 
-RescueMap OS does **not** make life-critical decisions on behalf of users.  
-It does **not** provide AI-based indoor escape routing.
+RescueMap OS does not make life-critical decisions for users.
+
+It does not provide AI-based indoor escape routing.
 
 Instead, it focuses on three principles:
 
-1. **Before disaster**: build evacuation memory  
-2. **During disaster**: leave location and status clues  
-3. **After disaster**: generate failure maps for future improvement  
+1. **Before disaster**: build evacuation memory
+2. **During disaster**: leave location and status clues
+3. **After disaster**: generate failure maps for future improvement
 
 ## Why This Project Matters
 
-In real disaster situations, users may not be able to calmly search information or operate complex apps.  
+In real disaster situations, users may not be able to calmly search information or operate complex apps.
+
 Indoor GPS can be inaccurate, networks may fail, and vulnerable users may require different support flows.
 
-RescueMap OS provides a simple structure:
-
-- 3-button status sharing
-- building/floor/zone-based location clues
-- vulnerable-user modes
-- guardian/institution check-in chain
-- public map and risk layers
-- post-disaster failure-map reporting
-- editable open-source disaster response data kit
+RescueMap OS focuses on leaving useful clues rather than giving risky automated escape directions.
 
 ## Key Features
 
-### 1. Three-Button Status Sharing
+- 3-button status sharing: Safe / Moving / Need Help
+- Building, floor, room, and zone-based location clue logging
+- Vulnerable-user modes
+- Guardian and institution check-in chain
+- Public map and risk layers
+- Post-disaster failure-map report
+- Editable open-source disaster response kit
 
-Users can quickly choose one of three states:
+## What This Project Does Not Do
 
-- Safe
-- Moving
-- Need Help
+- No AI-based life-or-death decision making
+- No automatic indoor escape routing
+- No medical diagnosis
+- No rescue success guarantee
+- No always-on location tracking
 
-### 2. Indoor Isolation Clue Logging
-
-Instead of giving risky AI-based indoor directions, the system records clues such as:
-
-- building name
-- floor
-- room
-- zone
-- last GPS
-- QR/NFC location tag
-- Wi-Fi/BLE proximity clue
-
-### 3. Vulnerable User Modes
-
-Optional modes include:
-
-- elderly mode
-- disabled mode
-- isolated youth mode
-- night-return mode
-- infection-sensitive mode
-
-### 4. Open Disaster Protocol Kit
-
-Disaster protocols are managed as editable YAML files.
+## Open-source Kit Structure
 
 ```text
 rescue-kit/
@@ -70,124 +48,7 @@ rescue-kit/
 ├── vulnerable_modes/
 ├── local_data/
 └── report_templates/
-cat > README.md <<'EOF'
-# RescueMap OS
-
-**RescueMap OS** is an open-source disaster response kit designed to help citizens, vulnerable users, guardians, schools, welfare centers, and local institutions record location clues, share status, and generate post-disaster failure maps.
-
-## Core Concept
-
-RescueMap OS does **not** make life-critical decisions on behalf of users.  
-It does **not** provide AI-based indoor escape routing.
-
-Instead, it focuses on three principles:
-
-1. **Before disaster**: build evacuation memory  
-2. **During disaster**: leave location and status clues  
-3. **After disaster**: generate failure maps for future improvement  
-
-## Why This Project Matters
-
-In real disaster situations, users may not be able to calmly search information or operate complex apps.  
-Indoor GPS can be inaccurate, networks may fail, and vulnerable users may require different support flows.
-
-RescueMap OS provides a simple structure:
-
-- 3-button status sharing
-- building/floor/zone-based location clues
-- vulnerable-user modes
-- guardian/institution check-in chain
-- public map and risk layers
-- post-disaster failure-map reporting
-- editable open-source disaster response data kit
-
-## Key Features
-
-### 1. Three-Button Status Sharing
-
-Users can quickly choose one of three states:
-
-- Safe
-- Moving
-- Need Help
-
-### 2. Indoor Isolation Clue Logging
-
-Instead of giving risky AI-based indoor directions, the system records clues such as:
-
-- building name
-- floor
-- room
-- zone
-- last GPS
-- QR/NFC location tag
-- Wi-Fi/BLE proximity clue
-
-### 3. Vulnerable User Modes
-
-Optional modes include:
-
-- elderly mode
-- disabled mode
-- isolated youth mode
-- night-return mode
-- infection-sensitive mode
-
-### 4. Open Disaster Protocol Kit
-
-Disaster protocols are managed as editable YAML files.
-
-```text
-rescue-kit/
-├── disaster_protocols/
-├── vulnerable_modes/
-├── local_data/
-└── report_templates/
-
----
-
-## .gitignore
-
-```bash
-cat > .gitignore <<'EOF'
-# OS
-.DS_Store
-Thumbs.db
-
-# Node
-node_modules/
-dist/
-.env
-.env.local
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-logs/
-*.log
-
-# Build
-build/
-
-## Running the Frontend MVP
-
-```bash
-cd frontend
-npm install
-npm run dev
-Local development URL:
-
-http://localhost:5173/
-Current MVP Status
+Frontend MVP
 
 The current frontend MVP includes:
 
@@ -196,5 +57,32 @@ vulnerable-user mode selection
 three-button status sharing
 location clue preview
 ethics and safety principles
+Running the Frontend MVP
+cd frontend
+npm install
+npm run dev
 
-This MVP intentionally excludes AI-based indoor escape routing and automated life-critical decision making.
+Local development URL:
+
+http://localhost:5173/
+MVP Stack
+Frontend: React + Vite + TypeScript
+Backend: FastAPI
+Database: SQLite or PostgreSQL/PostGIS
+Map: Leaflet or MapLibre GL
+Data: YAML, CSV, GeoJSON, JSON
+StellaVision Coffee Chat Note
+
+This project is related to spatial data, status information, public risk layers, and decision-support dashboards.
+
+The future direction may include public geospatial data and Sentinel/SAR-based flood reference layers.
+
+License
+
+MIT License
+
+Author
+
+Lee Youngjun
+Paejae University, Department of Computer Science
+GitHub: @gxmzung
