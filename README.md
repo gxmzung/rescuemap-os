@@ -267,3 +267,32 @@ rescue-kit/local_data/danger_zones.geojson
 This allows each local government, school, welfare center, or community to maintain its own shelter and danger-zone data.
 
 각 기관은 프론트엔드 코드를 수정하지 않고 CSV와 GeoJSON 데이터만 수정하여 자기 지역의 대피소와 위험구역을 반영할 수 있습니다.
+
+---
+
+## 16. Nationwide Disaster Scenario Runner
+
+RescueMap OS includes a nationwide disaster scenario runner for demonstration and testing.
+
+RescueMap OS는 전국 단위 재난 대응 흐름을 시연하고 테스트하기 위한 시나리오 실행 기능을 포함합니다.
+
+### Current Scenario Samples
+
+- Seoul urban flood scenario
+- Busan typhoon and coastal-risk scenario
+- Daejeon building fire isolation scenario
+- Jeju typhoon and vulnerable-user check-in scenario
+
+### Scenario Flow
+
+```text
+Select scenario
+→ Create citizen status record
+→ Send to FastAPI backend
+→ Show on institution dashboard
+→ Update check-in status
+→ Register as failure-map candidate
+→ Generate post-disaster report
+This feature helps judges and contributors understand how RescueMap OS works as a nationwide, data-driven open-source disaster response kit.
+
+이 기능은 RescueMap OS가 특정 지역 전용 앱이 아니라 전국 지역 데이터와 재난 시나리오를 기반으로 확장 가능한 오픈소스 재난 대응 키트임을 보여줍니다.

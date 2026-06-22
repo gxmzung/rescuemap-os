@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import RescueMapView from "./components/RescueMapView";
+import ScenarioPanel from "./components/ScenarioPanel";
+import type { DemoScenario } from "./data/demoScenarios";
 import { createStatus, fetchIncidents, updateIncidentCheckin, generateFailureReport, type CheckinStatus } from "./api";
 import {
   AlertTriangle,
@@ -160,6 +162,7 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "connected" | "error">("idle");
   const [apiMessage, setApiMessage] = useState("Mock API 연결 전");
   const [reportMessage, setReportMessage] = useState("아직 생성된 실패지도 리포트가 없습니다.");
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string | undefined>();
 
   const disaster = disasters.find((item) => item.id === selectedDisaster) ?? disasters[0];
   const mode = modes.find((item) => item.id === selectedMode) ?? modes[0];
@@ -203,6 +206,24 @@ export default function App() {
     { label: "기관 전송", desc: saved ? "대시보드 반영 가능" : "전송 전", done: saved, icon: <Send /> },
     { label: "기관 확인", desc: selectedIncident?.checkin ?? "대기", done: selectedIncident?.checkin === "기관 확인 완료" || selectedIncident?.checkin === "실패지도 후보", icon: <Eye /> },
   ];
+
+  async function runScenario(scenario: DemoScenario) {
+    try {
+      setApiStatus("loading");
+
+      const newIncident = await createStatus(scenario.payload);
+
+      setIncidents([newIncident, ...incidents]);
+      setLastIncidentId(newIncident.id);
+      setSelectedScenarioId(scenario.id);
+      setApiStatus("connected");
+      setApiMessage(`${scenario.region} 시나리오 실행 완료 · ${newIncident.id} 생성`);
+      setView("admin");
+    } catch {
+      setApiStatus("error");
+      setApiMessage("시나리오 실행 실패 · 백엔드 연결을 확인하세요");
+    }
+  }
 
   async function sendStatus() {
     try {
@@ -331,6 +352,11 @@ export default function App() {
               </div>
             </div>
           </section>
+
+          <ScenarioPanel
+            onRunScenario={runScenario}
+            selectedScenarioId={selectedScenarioId}
+          />
 
           <section className="flowPanel panel">
             <div className="flowHead">
