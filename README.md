@@ -1,158 +1,47 @@
-# RescueMap OS  
-# 레스큐맵 OS
+# RescueMap OS
 
-**Open-source disaster response kit for location clues, vulnerable-user check-ins, and post-disaster failure-map reporting.**  
-**재난 상황에서 위치 단서, 취약계층 체크인, 재난 후 실패 지도 생성을 돕는 오픈소스 재난 대응 키트입니다.**
+> 재난 상황에서 시민과 취약계층의 위치 단서, 상태, 도움 요청을 기록하고 기관이 확인할 수 있도록 돕는 오픈소스 재난 대응 키트입니다.
 
----
-
-## 1. Project Overview  
 ## 1. 프로젝트 개요
 
-RescueMap OS is an open-source disaster response platform designed to help citizens, vulnerable users, guardians, schools, welfare centers, and local institutions record location clues, share emergency status, and generate post-disaster failure maps.
+RescueMap OS는 재난·고립·귀가 위험 상황에서 사용자가 최소 입력으로 자신의 상태와 위치 단서를 남기고, 보호자·학교·복지기관·지자체 담당자가 이를 확인할 수 있도록 돕는 오픈소스 재난 대응 플랫폼입니다.
 
-RescueMap OS는 시민, 취약계층, 보호자, 학교, 복지기관, 지역 기관이 재난 상황에서 위치 단서와 상태를 기록하고, 재난 이후에는 실패 지도를 생성할 수 있도록 돕는 오픈소스 재난 대응 플랫폼입니다.
+이 프로젝트는 AI가 사용자의 생명을 대신 판단하거나 실내 탈출 경로를 지시하지 않습니다. 대신 다음 구조에 집중합니다.
 
-This project does **not** make life-critical decisions on behalf of users.  
-It does **not** provide AI-based indoor escape routing.
+- 재난 전: 대피 기억을 만든다
+- 재난 중: 위치와 상태 단서를 남긴다
+- 재난 후: 실패 지도를 만들어 다음 대응을 개선한다
 
-본 프로젝트는 사용자의 생명 판단을 자동화하지 않습니다.  
-또한 AI 기반 실내 탈출 경로 안내를 제공하지 않습니다.
+## 2. 주요 기능
 
-Instead, RescueMap OS focuses on a safer and more realistic disaster-response principle:
+### 시민용 화면
 
-대신 RescueMap OS는 더 안전하고 현실적인 재난 대응 원칙에 집중합니다.
+- 재난 유형 선택
+- 취약계층 모드 선택
+- 위치 단서 입력
+- 안전함 / 이동 중 / 도움 필요 3버튼 상태 공유
+- 오프라인 우선 저장 흐름 표시
+- 근처 대피소 및 행동카드 확인
 
-1. **Before disaster:** build evacuation memory  
-   **재난 전:** 대피 기억을 만든다.
+### 기관 관리자 대시보드
 
-2. **During disaster:** leave location and status clues  
-   **재난 중:** 위치와 상태 단서를 남긴다.
+- 도움 요청 목록 확인
+- 위험 점수 참고
+- 보호자 및 기관 체크인 상태 확인
+- 기관 확인 완료 처리
+- 실패지도 후보 등록
 
-3. **After disaster:** generate failure maps for future improvement  
-   **재난 후:** 실패 지도를 만들어 다음 대응을 개선한다.
+### SAR·공공데이터 위험 레이어
 
----
+- 대피소 레이어
+- 위험구역 레이어
+- 사용자 위치 단서 레이어
+- SAR 침수 참고 Mock 레이어
+- 응급기관 및 복지시설 레이어 확장 구조
 
-## 2. Why This Project Matters  
-## 2. 개발 배경
+SAR 레이어는 실시간 구조 명령이나 사람 추적용이 아니라, 침수 가능 영역을 이해하기 위한 참고 레이어입니다.
 
-In real disaster situations, people may not be able to calmly search information or operate complex applications.  
-Indoor GPS can be inaccurate, networks may fail, and vulnerable users may need different support flows.
-
-실제 재난 상황에서는 사용자가 침착하게 정보를 검색하거나 복잡한 앱을 조작하기 어렵습니다.  
-실내 GPS는 부정확할 수 있고, 통신망은 불안정할 수 있으며, 취약계층은 일반 사용자와 다른 지원 흐름이 필요할 수 있습니다.
-
-Many disaster applications focus on alerts, shelters, and basic safety guides.  
-However, actual disaster response also requires location clues, check-in flows, vulnerable-user support, institutional confirmation, and post-disaster analysis.
-
-기존 재난 서비스는 재난 알림, 대피소 안내, 행동요령 제공에 집중하는 경우가 많습니다.  
-하지만 실제 대응 과정에서는 위치 단서, 체크인 흐름, 취약계층 지원, 기관 확인, 재난 이후 분석까지 연결되는 구조가 필요합니다.
-
-RescueMap OS was designed to fill this gap as an open-source kit that can be customized by local communities, schools, welfare centers, and public institutions.
-
-RescueMap OS는 이러한 문제를 해결하기 위해 지역, 학교, 복지기관, 공공기관이 직접 수정해 사용할 수 있는 오픈소스 재난 대응 키트로 설계되었습니다.
-
----
-
-## 3. Key Features  
-## 3. 주요 기능
-
-### 3.1 Three-Button Status Sharing  
-### 3.1 3버튼 상태 공유
-
-Users can quickly share one of three emergency states:
-
-사용자는 위기 상황에서 세 가지 상태 중 하나를 빠르게 공유할 수 있습니다.
-
-- Safe / 안전함
-- Moving / 이동 중
-- Need Help / 도움 필요
-
-The system records the selected status together with time, disaster type, vulnerable mode, and location clues.
-
-시스템은 선택된 상태와 함께 시간, 재난 유형, 취약 모드, 위치 단서를 함께 기록합니다.
-
----
-
-### 3.2 Indoor Isolation Clue Logging  
-### 3.2 실내 고립 위치 단서 기록
-
-Instead of giving risky AI-based indoor escape directions, the system records clues that may help guardians, institutions, or responders understand the user's last known situation.
-
-RescueMap OS는 위험할 수 있는 AI 기반 실내 탈출 안내를 제공하지 않고, 보호자·기관·구조자가 사용자의 마지막 상황을 이해하는 데 도움이 되는 단서를 기록합니다.
-
-Possible clues include:
-
-기록 가능한 위치 단서는 다음과 같습니다.
-
-- Building name / 건물명
-- Floor / 층수
-- Room or zone / 호실 또는 구역
-- Last GPS location / 마지막 GPS 위치
-- QR/NFC location tag / QR 또는 NFC 위치 태그
-- Wi-Fi/BLE proximity clue / Wi-Fi 또는 BLE 근접 단서
-
----
-
-### 3.3 Vulnerable-User Modes  
-### 3.3 취약계층 맞춤 모드
-
-Disaster risk is not the same for everyone.  
-RescueMap OS provides optional vulnerable-user modes so that users can receive support flows that better match their situation.
-
-재난 위험은 모든 사람에게 동일하지 않습니다.  
-RescueMap OS는 사용자의 상황에 맞는 지원 흐름을 제공하기 위해 선택형 취약 모드를 제공합니다.
-
-Current sample modes include:
-
-현재 샘플 모드는 다음과 같습니다.
-
-- Elderly mode / 노인 모드
-- Disabled mobility-support mode / 장애인 이동지원 모드
-- Isolated youth mode / 고립 청년 모드
-- Night-return mode / 야간 귀가 모드
-- Infection-sensitive mode / 감염병 취약 모드
-
-These modes are not labels for discrimination.  
-They exist to provide different support options for different needs.
-
-이 모드는 사용자를 낙인찍기 위한 분류가 아닙니다.  
-상황별로 필요한 도움을 다르게 제공하기 위한 선택형 지원 구조입니다.
-
----
-
-### 3.4 Guardian and Institution Check-in Chain  
-### 3.4 보호자·기관 체크인 체인
-
-Emergency status sharing should not end with a single message.  
-RescueMap OS is designed to connect the user, guardian, welfare worker, school or institution manager, and response organization through a check-in flow.
-
-도움 요청은 단순히 한 번 전송되는 것으로 끝나서는 안 됩니다.  
-RescueMap OS는 사용자, 보호자, 복지 담당자, 학교·기관 관리자, 대응 기관을 체크인 흐름으로 연결하도록 설계되었습니다.
-
-This makes it easier to see:
-
-이를 통해 다음 사항을 확인할 수 있습니다.
-
-- Who has checked the request / 누가 요청을 확인했는지
-- Which users are still unconfirmed / 아직 확인되지 않은 사용자는 누구인지
-- Which cases may require institutional response / 기관 대응이 필요한 상황은 무엇인지
-
----
-
-### 3.5 Open Disaster Response Kit  
-### 3.5 오픈소스 재난 대응 키트
-
-RescueMap OS is not only an application.  
-It is also an editable open-source disaster response kit.
-
-RescueMap OS는 단순한 앱이 아닙니다.  
-지역과 기관이 직접 수정할 수 있는 오픈소스 재난 대응 키트입니다.
-
-The kit includes:
-
-키트는 다음과 같은 데이터 구조를 포함합니다.
+### 오픈소스 재난 대응 키트
 
 ```text
 rescue-kit/
@@ -160,235 +49,80 @@ rescue-kit/
 ├── vulnerable_modes/
 ├── local_data/
 └── report_templates/
-Disaster protocols: YAML
-재난 행동 프로토콜: YAML
-Vulnerable-user modes: YAML
-취약계층 모드: YAML
-Shelter data: CSV
-대피소 데이터: CSV
-Danger zones: GeoJSON
-위험구역 데이터: GeoJSON
-Failure reports: Markdown
-실패 지도 리포트: Markdown
-3.6 Public Data and Risk Layers
-3.6 공공데이터 및 위험 레이어
+disaster_protocols: 재난 유형별 행동 프로토콜 YAML
+vulnerable_modes: 취약계층 지원 모드 YAML
+local_data: 대피소 CSV, 위험구역 GeoJSON
+report_templates: 재난 후 실패지도 리포트 Markdown
+3. 현재 구현 상태
 
-The project can be extended with public geospatial data and disaster-risk layers.
+현재 MVP는 다음 기능을 포함합니다.
 
-본 프로젝트는 공공 공간정보와 재난 위험 레이어를 활용하도록 확장할 수 있습니다.
-
-Possible data layers include:
-
-활용 가능한 데이터 레이어는 다음과 같습니다.
-
-Shelter locations / 대피소 위치
-Rivers and lowlands / 하천 및 저지대
-Underground roads and underpasses / 지하차도 및 지하공간
-Hospitals, fire stations, and police stations / 병원, 소방서, 경찰서
-Welfare facilities / 복지시설
-OpenStreetMap road data / OpenStreetMap 도로 데이터
-Future Sentinel/SAR-based flood reference layers / 향후 Sentinel/SAR 기반 침수 참고 레이어
-3.7 Post-Disaster Failure Map
-3.7 재난 후 실패 지도
-
-After a disaster, anonymized records can be converted into a failure-map report.
-
-재난 이후에는 익명화된 기록을 실패 지도 리포트로 전환할 수 있습니다.
-
-The report may include:
-
-리포트에는 다음 내용이 포함될 수 있습니다.
-
-Repeated isolation points / 반복 고립 지점
-Delayed check-in areas / 체크인 지연 지역
-Shelter accessibility issues / 대피소 접근성 문제
-Network failure cases / 통신 장애 사례
-Vulnerable-user support gaps / 취약계층 지원 공백
-
-This helps communities and institutions improve their future disaster-response plans.
-
-이를 통해 지역사회와 기관은 다음 재난 대응 체계를 개선할 수 있습니다.
-
-4. Current MVP Status
-4. 현재 MVP 상태
-
-The current frontend MVP includes:
-
-현재 프론트엔드 MVP는 다음 기능을 포함합니다.
-
-Disaster type selection / 재난 유형 선택
-Vulnerable-user mode selection / 취약 모드 선택
-Three-button status sharing / 3버튼 상태 공유
-Location clue preview / 위치 단서 미리보기
-Ethics and safety principles / 윤리적 설계 원칙 표시
-
-This MVP intentionally excludes AI-based indoor escape routing and automated life-critical decision making.
-
-현재 MVP는 의도적으로 AI 기반 실내 탈출 경로 안내와 자동 생명 판단 기능을 제외했습니다.
-
-5. Running the Frontend MVP
-5. 프론트엔드 MVP 실행 방법
+React 기반 시민용 상태 공유 화면
+기관 관리자 대시보드 화면
+SAR·공공데이터 위험 레이어 화면
+오픈소스 키트 구조 설명 화면
+FastAPI 기반 Mock Backend API
+프론트엔드와 Mock API 연동 구조
+4. 기술 스택
+영역	기술
+Frontend	React, Vite, TypeScript
+UI	CSS, lucide-react
+Backend	FastAPI
+API Docs	Swagger UI
+Data	YAML, CSV, GeoJSON, JSON
+Version Control	Git, GitHub
+5. 실행 방법
+Frontend
 cd frontend
 npm install
 npm run dev
 
-Local development URL:
+Frontend URL:
 
-로컬 개발 주소:
-
-http://localhost:5173/
-6. Tech Stack
-6. 기술 스택
-Frontend: React, Vite, TypeScript
-Backend: FastAPI
-Database: SQLite or PostgreSQL/PostGIS
-Map: Leaflet or MapLibre GL
-Data: YAML, CSV, GeoJSON, JSON
-Collaboration: GitHub, Issues, Pull Requests, Markdown Docs
-7. What This Project Does Not Do
-7. 본 프로젝트가 하지 않는 것
-No AI-based life-or-death decision making
-AI 기반 생명 판단을 하지 않습니다.
-No automatic indoor escape routing
-자동 실내 탈출 경로 안내를 하지 않습니다.
-No medical diagnosis
-의료 진단을 하지 않습니다.
-No rescue success guarantee
-구조 성공을 보장하지 않습니다.
-No always-on location tracking
-위치를 상시 추적하지 않습니다.
-8. Ethics and Safety
-8. 윤리 및 안전 원칙
-
-In a real disaster, building layouts may change quickly.
-Stairs may be blocked, smoke may spread, power may fail, and indoor maps may become outdated.
-
-실제 재난 상황에서는 건물 구조가 빠르게 변할 수 있습니다.
-계단이 막히거나, 연기가 퍼지거나, 전기가 끊기거나, 실내 지도가 더 이상 실제 상황과 맞지 않을 수 있습니다.
-
-For that reason, RescueMap OS does not tell users which indoor route to take.
-Instead, it helps users leave useful clues so that people can find and support them.
-
-따라서 RescueMap OS는 사용자에게 실내 이동 경로를 직접 지시하지 않습니다.
-대신 사람이 사람을 더 빨리 찾고 지원할 수 있도록 위치와 상태 단서를 남기는 데 집중합니다.
-
-9. License
-9. 라이선스
-
-MIT License
-
-10. Author
-10. 제작자
-
-Lee Youngjun
-Paejae University, Department of Computer Science
-GitHub: @gxmzung
-
----
-
-## 11. Implementation Screens  
-## 11. 구현 화면
-
-### 11.1 Citizen Status Sharing Screen  
-### 11.1 시민 상태 공유 화면
-
-![Citizen Status Sharing Screen](assets/screenshots/01_user_status_share.png)
-
-The citizen screen is designed for fast use in stressful disaster situations.  
-Users can select a disaster type, choose an optional vulnerable-user mode, and share their current status through only three buttons: Safe, Moving, and Need Help.
-
-시민 화면은 재난 상황에서 빠르게 사용할 수 있도록 설계되었습니다.  
-사용자는 재난 유형을 선택하고, 필요한 경우 취약 모드를 선택한 뒤, “안전함”, “이동 중”, “도움 필요” 세 가지 버튼 중 하나만 눌러 현재 상태를 남길 수 있습니다.
-
-This screen intentionally avoids complex forms and AI-based escape routing.  
-The goal is to record useful clues such as disaster type, vulnerable mode, location clue, time, and risk reference score.
-
-이 화면은 복잡한 입력 양식과 AI 기반 탈출 경로 안내를 의도적으로 제외했습니다.  
-목표는 재난 유형, 취약 모드, 위치 단서, 기록 시간, 참고용 위험 점수처럼 구조자와 기관이 확인할 수 있는 단서를 남기는 것입니다.
-
----
-
-### 11.2 Institution Admin Dashboard  
-### 11.2 기관 관리자 대시보드
-
-![Institution Admin Dashboard](assets/screenshots/02_admin_dashboard.png)
-
-The admin dashboard shows incoming status records, help requests, risk reference scores, check-in status, and failure-map candidates.  
-It is designed for schools, welfare centers, local institutions, and response managers who need to quickly identify unconfirmed or high-risk cases.
-
-관리자 대시보드는 수신된 상태 기록, 도움 요청, 참고용 위험 점수, 체크인 상태, 실패 지도 후보를 보여줍니다.  
-학교, 복지기관, 지역 기관, 대응 담당자가 아직 확인되지 않았거나 위험도가 높은 요청을 빠르게 파악할 수 있도록 설계되었습니다.
-
-The risk score is not a rescue command or automated life decision.  
-It is only a reference indicator for prioritizing human confirmation.
-
-위험 점수는 구조 명령이나 자동 생명 판단이 아닙니다.  
-사람이 먼저 확인해야 할 대상을 정리하기 위한 참고 지표입니다.
-
----
-
-### 11.3 Design Direction  
-### 11.3 디자인 방향
-
-The interface uses large cards, clear labels, high-contrast colors, and minimal interaction steps.  
-This is because disaster interfaces should be readable, quick, and usable under stress.
-
-인터페이스는 큰 카드, 명확한 라벨, 높은 대비, 최소한의 조작 단계를 중심으로 구성했습니다.  
-재난 상황에서 사용하는 화면은 예쁘기보다 빠르게 읽히고, 긴장 상태에서도 사용할 수 있어야 하기 때문입니다.
-
-RescueMap OS is designed around one principle:
-
-RescueMap OS의 화면 설계 원칙은 하나입니다.
-
-> Do not make the user think too much during a disaster.  
-> 재난 상황에서 사용자가 오래 고민하지 않게 만든다.
-
----
-
-## 12. Mock Backend API  
-## 12. Mock 백엔드 API
-
-RescueMap OS includes a FastAPI-based mock backend API for demonstrating the core data flow.
-
-RescueMap OS는 핵심 데이터 흐름을 시연하기 위해 FastAPI 기반 Mock 백엔드 API를 포함합니다.
-
-### Backend Features  
-### 백엔드 기능
-
-- Create citizen status records / 시민 상태 기록 생성
-- List incident records / 도움 요청 목록 조회
-- Update check-in status / 체크인 상태 변경
-- Provide SAR and public-data layers / SAR·공공데이터 레이어 제공
-- Provide open-source kit structure / 오픈소스 키트 구조 제공
-- Preview failure-map report candidates / 실패지도 후보 리포트 미리보기
-
-### Running the Backend  
-### 백엔드 실행 방법
-
-```bash
+http://localhost:5173
+Backend
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
-Local API URL:
+
+Backend URL:
 
 http://127.0.0.1:8000
 
 Swagger API Docs:
 
 http://127.0.0.1:8000/docs
-Main Endpoints
-주요 엔드포인트
+6. 주요 API
 GET    /api/incidents
 POST   /api/status
 PATCH  /api/incidents/{incident_id}/checkin
 GET    /api/layers
 GET    /api/kit
 GET    /api/failure-report
+7. 작동 흐름
+시민 상태 공유
+→ 위치 단서 로컬 저장
+→ 네트워크 가능 시 기관 대시보드 전송
+→ 기관 담당자 확인
+→ 체크인 상태 변경
+→ 재난 후 실패지도 후보 등록
+8. 하지 않는 것
 
-The backend is currently a mock API.
-It is designed to show the intended flow before connecting a database.
+RescueMap OS는 다음 기능을 제공하지 않습니다.
 
-현재 백엔드는 Mock API입니다.
-데이터베이스 연결 전, 프로젝트의 핵심 작동 흐름을 보여주기 위한 구조입니다.
+AI 기반 생명 판단
+AI 기반 실내 탈출 경로 안내
+의료 진단
+구조 성공 보장
+위치 상시 추적
+9. 라이선스
+
+MIT License
+
+10. 제작자
+
+Lee Youngjun
+Paejae University, Department of Computer Science
+GitHub: @gxmzung
