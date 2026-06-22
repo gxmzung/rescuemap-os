@@ -1,4 +1,5 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { createStatus, fetchIncidents, updateIncidentCheckin, generateFailureReport, type CheckinStatus } from "./api";
 import {
   AlertTriangle,
   Building2,
@@ -50,7 +51,7 @@ type Incident = {
   mode: string;
   location: string;
   risk: number;
-  checkin: "미확인" | "로컬 저장" | "기관 전송 대기" | "기관 확인 대기" | "기관 확인 완료" | "실패지도 후보";
+  checkin: CheckinStatus;
   time: string;
 };
 
@@ -155,10 +156,31 @@ export default function App() {
   const [layers, setLayers] = useState(layerItems);
   const [lastIncidentId, setLastIncidentId] = useState("RM-001");
   const [saved, setSaved] = useState(true);
+  const [apiStatus, setApiStatus] = useState<"idle" | "loading" | "connected" | "error">("idle");
+  const [apiMessage, setApiMessage] = useState("Mock API 연결 전");
+  const [reportMessage, setReportMessage] = useState("아직 생성된 실패지도 리포트가 없습니다.");
 
   const disaster = disasters.find((item) => item.id === selectedDisaster) ?? disasters[0];
   const mode = modes.find((item) => item.id === selectedMode) ?? modes[0];
   const selectedIncident = incidents.find((item) => item.id === lastIncidentId) ?? incidents[0];
+
+  useEffect(() => {
+    async function loadIncidents() {
+      try {
+        setApiStatus("loading");
+        const items = await fetchIncidents();
+        setIncidents(items);
+        if (items[0]) setLastIncidentId(items[0].id);
+        setApiStatus("connected");
+        setApiMessage("FastAPI Mock Backend 연결 완료");
+      } catch {
+        setApiStatus("error");
+        setApiMessage("백엔드 연결 실패 · 화면은 로컬 Mock 데이터로 동작 중");
+      }
+    }
+
+    loadIncidents();
+  }, []);
 
   const risk = useMemo(() => {
     return Math.min(100, Math.round(statusMeta[status].risk * mode.weight));
@@ -181,28 +203,76 @@ export default function App() {
     { label: "기관 확인", desc: selectedIncident?.checkin ?? "대기", done: selectedIncident?.checkin === "기관 확인 완료" || selectedIncident?.checkin === "실패지도 후보", icon: <Eye /> },
   ];
 
-  function sendStatus() {
-    const newIncident: Incident = {
-      id: `RM-${String(incidents.length + 1).padStart(3, "0")}`,
-      status,
-      disaster: disaster.label,
-      mode: mode.label,
-      location: "배재대학교 P관 3층 서쪽 복도",
-      risk,
-      checkin: "기관 확인 대기",
-      time: "방금 전",
-    };
+  async function sendStatus() {
+    try {
+      setApiStatus("loading");
 
-    setIncidents([newIncident, ...incidents]);
-    setLastIncidentId(newIncident.id);
-    setSaved(true);
-    setView("admin");
+      const newIncident = await createStatus({
+        status,
+        disaster: disaster.label,
+        mode: mode.label,
+        location: "배재대학교 P관 3층 서쪽 복도",
+        building: "P관",
+        floor: "3층",
+        zone: "서쪽 복도",
+        risk,
+      });
+
+      setIncidents([newIncident, ...incidents]);
+      setLastIncidentId(newIncident.id);
+      setSaved(true);
+      setApiStatus("connected");
+      setApiMessage(`${newIncident.id} 기록이 FastAPI Mock Backend에 생성되었습니다`);
+      setView("admin");
+    } catch {
+      const fallbackIncident: Incident = {
+        id: `RM-${String(incidents.length + 1).padStart(3, "0")}`,
+        status,
+        disaster: disaster.label,
+        mode: mode.label,
+        location: "배재대학교 P관 3층 서쪽 복도",
+        risk,
+        checkin: "기관 확인 대기",
+        time: "방금 전",
+      };
+
+      setIncidents([fallbackIncident, ...incidents]);
+      setLastIncidentId(fallbackIncident.id);
+      setSaved(true);
+      setApiStatus("error");
+      setApiMessage("API 연결 실패 · 로컬 Mock 데이터로 기록되었습니다");
+      setView("admin");
+    }
   }
 
-  function updateIncident(next: Incident["checkin"]) {
-    setIncidents((prev) =>
-      prev.map((item) => item.id === selectedIncident.id ? { ...item, checkin: next } : item)
-    );
+  async function updateIncident(next: Incident["checkin"]) {
+    try {
+      const updated = await updateIncidentCheckin(selectedIncident.id, next);
+      setIncidents((prev) =>
+        prev.map((item) => item.id === updated.id ? updated : item)
+      );
+      setApiStatus("connected");
+      setApiMessage(`${updated.id} 체크인 상태가 '${updated.checkin}'으로 변경되었습니다`);
+    } catch {
+      setIncidents((prev) =>
+        prev.map((item) => item.id === selectedIncident.id ? { ...item, checkin: next } : item)
+      );
+      setApiStatus("error");
+      setApiMessage("API 연결 실패 · 화면에서만 체크인 상태를 변경했습니다");
+    }
+  }
+
+  async function handleGenerateReport() {
+    try {
+      const result = await generateFailureReport();
+      setReportMessage(`${result.filename} 생성 완료 · 후보 ${result.candidate_count}건`);
+      setApiStatus("connected");
+      setApiMessage("실패지도 리포트가 backend/reports 폴더에 생성되었습니다");
+    } catch {
+      setReportMessage("실패지도 리포트 생성 실패 · 백엔드 연결을 확인하세요");
+      setApiStatus("error");
+      setApiMessage("실패지도 리포트 생성 API 호출 실패");
+    }
   }
 
   function toggleLayer(id: string) {
@@ -229,6 +299,11 @@ export default function App() {
           <button className={view === "kit" ? "active" : ""} onClick={() => setView("kit")}>오픈소스 키트</button>
         </nav>
       </header>
+
+      <div className={`apiBanner ${apiStatus}`}>
+        <strong>API 상태</strong>
+        <span>{apiMessage}</span>
+      </div>
 
       {view === "citizen" && (
         <section className="page citizen">
@@ -446,6 +521,12 @@ export default function App() {
               <div className="processBox">
                 <strong>처리 흐름</strong>
                 <span>시민 기록 → 기관 확인 → 현장 참고 → 익명화 → 실패지도 리포트</span>
+              </div>
+
+              <div className="reportBox">
+                <strong>재난 후 실패지도 리포트</strong>
+                <span>{reportMessage}</span>
+                <button onClick={handleGenerateReport}>실패지도 리포트 생성</button>
               </div>
             </div>
           </section>

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.models import StatusCreate, Incident, CheckinUpdate
+from app.report import build_failure_report, render_failure_report_markdown, save_failure_report
 from app.database import (
     list_incidents,
     create_incident,
@@ -87,14 +88,43 @@ def get_kit_structure():
 @router.get("/api/failure-report")
 def get_failure_report_preview():
     items = list_incidents()
-    failure_candidates = [
-        item for item in items
-        if item["checkin"] == "실패지도 후보" or item["status"] == "help"
-    ]
+    report = build_failure_report(items)
 
     return {
         "title": "Post-disaster Failure Map Report Preview",
         "summary": "익명화된 도움 요청, 고립 위치, 체크인 지연 기록을 기반으로 실패지도 후보를 생성합니다.",
-        "candidate_count": len(failure_candidates),
-        "candidate_locations": [item["location"] for item in failure_candidates],
+        "generated_at": report["generated_at"],
+        "total_incidents": report["total_incidents"],
+        "candidate_count": report["failure_candidate_count"],
+        "high_risk_count": report["high_risk_count"],
+        "top_locations": report["top_locations"],
+        "disaster_summary": report["disaster_summary"],
+        "mode_summary": report["mode_summary"],
+        "candidate_locations": [item["location"] for item in report["items"]],
+    }
+
+
+@router.post("/api/failure-report/generate")
+def generate_failure_report():
+    items = list_incidents()
+    report = build_failure_report(items)
+    markdown = render_failure_report_markdown(report)
+    path = save_failure_report(markdown)
+
+    return {
+        "message": "Failure map report generated",
+        "filename": path.name,
+        "path": str(path),
+        "candidate_count": report["failure_candidate_count"],
+    }
+
+
+@router.get("/api/failure-report/markdown")
+def get_failure_report_markdown():
+    items = list_incidents()
+    report = build_failure_report(items)
+    markdown = render_failure_report_markdown(report)
+
+    return {
+        "markdown": markdown,
     }

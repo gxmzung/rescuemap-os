@@ -181,3 +181,33 @@ backend/data/rescuemap.db
 This database file is excluded from Git by .gitignore.
 
 SQLite는 MVP 단계의 로컬 저장 구조이며, 향후 PostgreSQL/PostGIS 기반 공간 데이터베이스로 확장할 수 있습니다.
+
+---
+
+## 13. Failure Map Report Generation
+
+RescueMap OS can generate a post-disaster failure-map report from incident records.
+
+RescueMap OS는 시민 상태 기록과 기관 체크인 상태를 기반으로 재난 후 실패지도 리포트를 생성할 수 있습니다.
+
+### Report Generation API
+
+```text
+POST /api/failure-report/generate
+GET  /api/failure-report/markdown
+Report Contents
+total incident records
+failure-map candidate count
+high-risk candidate count
+repeated failure locations
+disaster type summary
+vulnerable mode summary
+candidate record table
+
+Generated reports are saved locally under:
+
+backend/reports/
+
+Generated report files are excluded from Git by .gitignore.
+
+이 기능은 재난 대응 종료 후 반복 고립 구역, 체크인 지연, 취약계층 지원 공백을 파악하기 위한 개선 리포트입니다.
