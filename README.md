@@ -177,3 +177,24 @@ logs/
 
 # Build
 build/
+
+## Running the Frontend MVP
+
+```bash
+cd frontend
+npm install
+npm run dev
+Local development URL:
+
+http://localhost:5173/
+Current MVP Status
+
+The current frontend MVP includes:
+
+disaster type selection
+vulnerable-user mode selection
+three-button status sharing
+location clue preview
+ethics and safety principles
+
+This MVP intentionally excludes AI-based indoor escape routing and automated life-critical decision making.
