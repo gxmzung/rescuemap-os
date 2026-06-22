@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import RescueMapView from "./components/RescueMapView";
 import { createStatus, fetchIncidents, updateIncidentCheckin, generateFailureReport, type CheckinStatus } from "./api";
 import {
   AlertTriangle,
@@ -429,11 +430,7 @@ export default function App() {
 
             <div className="panel shelterPanel">
               <h2>근처 대피소 / 행동카드</h2>
-              <div className="miniMap lightMap">
-                <span className="pin shelter">대피소</span>
-                <span className="pin danger">화재</span>
-                <span className="pin user">내 위치</span>
-              </div>
+              <RescueMapView variant="citizen" />
               <p>대피소와 위험구역은 지역 데이터 파일을 기반으로 표시됩니다.</p>
             </div>
           </section>
@@ -487,13 +484,7 @@ export default function App() {
                 <h2>현장 지도</h2>
                 <button onClick={() => setView("layers")}>SAR 레이어 보기</button>
               </div>
-              <div className="bigMap">
-                <span className="mapBlob sar">SAR 침수 참고</span>
-                <span className="mapBlob fire">화재 발생</span>
-                <span className="mapBlob shelter">대피소</span>
-                <span className="mapBlob user">사용자 단서</span>
-                <span className="overlapAlert">위험 레이어 + 사용자 단서 겹침<br />우선 확인 필요</span>
-              </div>
+              <RescueMapView variant="admin" />
               <div className="mapLegend">
                 <span>SAR 침수 참고</span>
                 <span>위험 구역</span>
@@ -566,12 +557,7 @@ export default function App() {
 
             <div className="darkPanel layerMapPanel">
               <h2>위험 레이어 지도</h2>
-              <div className="layerMap">
-                {layers.find((item) => item.id === "sar")?.active && <span className="sarArea">SAR 침수 추정 영역</span>}
-                {layers.find((item) => item.id === "danger")?.active && <span className="dangerArea">위험구역</span>}
-                {layers.find((item) => item.id === "shelter")?.active && <span className="shelterMark">대피소</span>}
-                {layers.find((item) => item.id === "user")?.active && <span className="userMark">사용자 단서</span>}
-              </div>
+              <RescueMapView variant="layers" layers={layers} />
               <div className="notice">
                 사용자 위치 단서가 SAR 침수 참고 영역 또는 위험구역과 겹치면 관리자 화면에서 우선 확인 대상으로 표시됩니다.
               </div>
